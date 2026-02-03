@@ -9,3 +9,10 @@ BN254 is a widely used pairing-friendly elliptic curve, and is often used in ZK 
 * **g1_mul()** - used for scalar multiplication
 * **pairing_check()** - used for pairing checks
 
+For more information about X-Ray/Protocol 25, see the [blog post](https://stellar.org/blog/developers/announcing-stellar-x-ray-protocol-25).
+
+## g1_add()
+The `g1_add()` function is a native host function for elliptic-curve point addition on the BN254 curve’s G1 group. 
+
+
+
