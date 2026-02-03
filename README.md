@@ -15,4 +15,10 @@ For more information about X-Ray/Protocol 25, see the [blog post](https://stella
 The `g1_add()` function is a native host function for elliptic-curve point addition on the BN254 curve’s G1 group. 
 
 
+## g1_mul()
+
+
+
+## pairing_check()
+
 
