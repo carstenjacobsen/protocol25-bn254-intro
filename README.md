@@ -5,7 +5,7 @@ Protocol 25, also known as X-Ray, introduced three new ZK Proof primitives in So
 ### What's new?
 BN254 is a widely used pairing-friendly elliptic curve, and is often used in ZK Proofs systems. In this upgrade these three primitives were added to Soroban:
 
-* g1_add() - used for point addition
-* g1_mul() - used for scalar multiplication
-* pairing_check() - used for pairing checks
+* **g1_add()** - used for point addition
+* **g1_mul()** - used for scalar multiplication
+* **pairing_check()** - used for pairing checks
 
