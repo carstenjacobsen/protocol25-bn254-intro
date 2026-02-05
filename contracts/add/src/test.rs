@@ -12,9 +12,9 @@ fn test_add_points() {
   // Call the contract add_points()
   let result = client.add_points();
   // Create a (0,0) point on the curve
-  let infinity = Bn254G1Affine::from_array(&env, &[0u8; 64]);
+  let zero_point = Bn254G1Affine::from_array(&env, &[0u8; 64]);
   // Check if the add_points() function returns the (0,0) point
-  assert_eq!(result, infinity);
+  assert_eq!(result, zero_point);
 }
   
 
