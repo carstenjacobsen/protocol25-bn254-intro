@@ -22,8 +22,8 @@ impl Contract {
     // Negate the point: -G has same x but negated y
     let neg_point = -point.clone();
 
-    // Add the two points (G+(-G)) and the expected result is 
-    // a (0,0) point
+    // Add the two points (G+(-G)) and the expected returned  
+    // result is a (0,0) point
     env.crypto().bn254().g1_add(&point, &neg_point)
   }
 }
