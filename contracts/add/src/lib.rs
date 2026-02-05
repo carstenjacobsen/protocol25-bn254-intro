@@ -8,7 +8,7 @@ pub struct Contract;
 [contractimpl]
 impl Contract {
   pub fn add_points(env: Env) -> Bn254G1Affine {
-    // 
+    // Create a byte array for a point (1,2)
     let point_bytes: [u8; 64] = [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  // X
