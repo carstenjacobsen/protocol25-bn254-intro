@@ -1,1 +1,1 @@
-# `g1_add` Example
+# `g1_add()` Example
