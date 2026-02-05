@@ -1,6 +1,6 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, contracttype, BytesN, U256, Env, String, Vec};
-use soroban_sdk::crypto::bn254::{Bn254G1Affine, Bn254G2Affine, Fr};
+use soroban_sdk::{contract, contractimpl, Env, BytesN, U256, String, Vec};
+use soroban_sdk::crypto::bn254::{Bn254G1Affine};
 
 #[contract]
 pub struct Contract;
