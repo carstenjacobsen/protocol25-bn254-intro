@@ -5,6 +5,7 @@ Protocol 25, also known as X-Ray, introduced three new ZK Proof primitives in So
 ### Understanding the curve subgroups
 The BN254 elliptic curve has two subgroups, G1 and G2. G1 is the primary subgroup and the addition and multiplication operations included in Protocol 25 X-Ray are performed on points in the G1 subgroup. Points in the G1 subgroup are (x,y) pairs that satisfy the curve equation `y^2 = x^3 + 3`.
 
+G2
 
 ### What's new?
 BN254 is a widely used pairing-friendly elliptic curve, and is often used in ZK Proofs systems. In this upgrade these three primitives were added to Soroban:
