@@ -7,6 +7,8 @@ The BN254 elliptic curve has two subgroups, G1 and G2. G1 is the primary subgrou
 
 G2 is the second subgroup used in BN254, and each coordinate of a G2 point is itself a pair of field elements, meaning a G2 point requires 4 field elements to represent (compared to 2 for G1). G2 consists of points on a twisted curve, and the curve equation for G2 over the twist is typically `y² = x³ + b/ξ` (a "sextic twist" of the original curve, where ξ is a specific element).
 
+There are plenty of resources describing BN254 if you are interested in the cryptographics of DN254.
+
 ### What's new?
 BN254 is a widely used pairing-friendly elliptic curve, and is often used in ZK Proofs systems. In this upgrade these three primitives were added to Soroban:
 
