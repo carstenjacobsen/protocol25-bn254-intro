@@ -45,7 +45,7 @@ pub fn add_points(env: Env, point_1: Bn254G1Affine, point_2: Bn254G1Affine) -> B
 }
 ```
 
-The 
+The test creates a point based on a byte array, and another point which is a negated version of the first point. When these two points are added, the result should be (0,0) point because `G+(-G) = 0`.
 
 ```rust
 fn test_add_points() {
@@ -64,7 +64,7 @@ fn test_add_points() {
   // Create a point on the curve from the byte array
   let point = Bn254G1Affine::from_array(&env, &point_bytes);
 
-  // Negate the point: -G has same x but negated y
+  // Negate the point (has same x but negated y)
   let neg_point = -point.clone();
 
   // Call the function and get the result of the addition
