@@ -12,18 +12,16 @@ fn test_add_points() {
   // Create a byte array for a point (1,2)
   let point_bytes: [u8; 64] = [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  // x
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,  // y
   ];
 
   // Create a point on the curve from the byte array
   let point = Bn254G1Affine::from_array(&env, &point_bytes);
-  std::println!("Point B: {:?}", &point);
 
   // Negate the point: -G has same x but negated y
   let neg_point = -point.clone();
-  std::println!("Point -B: {:?}", &neg_point);
 
   // Call the function and get the result of the addition
   let result = client.add_points(&point, &neg_point);
