@@ -35,6 +35,9 @@ pub fn g1_add(&self, p0: &Bn254G1Affine, p1: &Bn254G1Affine) -> Bn254G1Affine
 The sum of `p0` and `p1` is returned as a new point in the `Bn254G1Affine` format.
 
 ### Example
+This example uses the `g1_add()` function to add two points, and then check if the result is as expected. The code for this example is [here](/contracts/add).
+
+The `add_points()` is a very simple contract function, it takes two points as arguments and return the point calculated from the points addition. The example test shows how points on the curve can be defined and used for this function. 
 
 ```rust
 pub fn add_points(env: Env, point_1: Bn254G1Affine, point_2: Bn254G1Affine) -> Bn254G1Affine {
@@ -42,7 +45,7 @@ pub fn add_points(env: Env, point_1: Bn254G1Affine, point_2: Bn254G1Affine) -> B
 }
 ```
 
-Test
+The 
 
 ```rust
 fn test_add_points() {
