@@ -26,8 +26,15 @@ For more information about X-Ray/Protocol 25, see the [blog post](https://stella
 
 
 ## g1_add()
-The `g1_add()` function is a native host function for elliptic-curve point addition on the BN254 curve’s G1 group. 
+The `g1_add()` function is a native host function for elliptic-curve point addition on the G1 subgroup. The function takes two points on the G1 as arguments, they have to be in `Bn254G1Affine` format:
 
+```rust
+pub fn g1_add(&self, p0: &Bn254G1Affine, p1: &Bn254G1Affine) -> Bn254G1Affine
+```
+
+The sum of `p0` and `p1` is returned as a new point in the `Bn254G1Affine` format.
+
+### Example
 
 ```rust
 pub fn add_points(env: Env, point_1: Bn254G1Affine, point_2: Bn254G1Affine) -> Bn254G1Affine {
