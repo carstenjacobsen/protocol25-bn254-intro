@@ -26,7 +26,7 @@ For more information about X-Ray/Protocol 25, see the [blog post](https://stella
 
 
 ## g1_add()
-The `g1_add()` function is a native host function for elliptic-curve point addition on the G1 subgroup. The function takes two points on the G1 as arguments, they have to be in `Bn254G1Affine` format:
+The `g1_add()` function is a native host function for elliptic-curve point addition in the G1 subgroup. The function takes two points in the G1 as arguments, they have to be in `Bn254G1Affine` format:
 
 ```rust
 pub fn g1_add(&self, p0: &Bn254G1Affine, p1: &Bn254G1Affine) -> Bn254G1Affine
@@ -45,7 +45,7 @@ pub fn add_points(env: Env, point_1: Bn254G1Affine, point_2: Bn254G1Affine) -> B
 }
 ```
 
-The test creates a point based on a byte array, and another point which is a negated version of the first point. When these two points are added, the result should be (0,0) point because `G+(-G) = 0`.
+The test creates a point based on a byte array, and another point which is a negated version of the first point. When these two points are added, the result should be (0,0) point since `G+(-G) = 0`.
 
 ```rust
 #[test]
@@ -79,21 +79,19 @@ fn test_add_points() {
 }
 ```
 
-
-
 ## g1_mul()
+The `g1_mul()` function is a native host function for elliptic-curve point multiplication in the G1 subgroup. The function takes a point in G1 and a scalar value as arguments:
 
+```rust
+pub fn g1_mul(&self, p0: &Bn254G1Affine, scalar: &Fr) -> Bn254G1Affine
+```
 
-
-
-
-
-
+The result of `p0` multiplied by `scalar` is returned as a new point in the `Bn254G1Affine` format.
 
 ### Example
 This example uses the `g1_mul()` function to multiply a point and a scalar value, and then check if the result is as expected. The code for this example is [here](/contracts/multiply).
 
-The `multiply_points()` is a very simple contract function, it takes a point and a value as arguments and return the point calculated from the points multiplication. The example test shows how a point on the curve can be defined and used for this function. 
+The `multiply_points()` is a very simple contract function, it takes a point and a value as arguments and return the point calculated from the point multiplication. The example test shows how a point on the curve can be defined and used for this function. 
 
 ```rust
 pub fn multiply_point(env: Env, point: Bn254G1Affine, scalar: U256) -> Bn254G1Affine {
@@ -105,7 +103,7 @@ pub fn multiply_point(env: Env, point: Bn254G1Affine, scalar: U256) -> Bn254G1Af
 }
 ```
 
-The test creates a point based on a byte array, and another point which is a negated version of the first point. When these two points are added, the result should be (0,0) point because `G+(-G) = 0`.
+The test creates a point based on a byte array, and use the value `1` as the value the point is multiplied by. The result should be the same as the created point since `G*1 = G`.
 
 ```rust
 #[test]
@@ -117,9 +115,9 @@ fn test_multiply_point() {
   // Create a byte array for a point (1,2)
   let point_bytes: [u8; 64] = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  // X
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  // x
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,  // Y
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,  // y
   ];
 
   // Call the multiply_point() contract function with the 
