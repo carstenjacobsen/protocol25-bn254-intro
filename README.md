@@ -48,6 +48,7 @@ pub fn add_points(env: Env, point_1: Bn254G1Affine, point_2: Bn254G1Affine) -> B
 The test creates a point based on a byte array, and another point which is a negated version of the first point. When these two points are added, the result should be (0,0) point because `G+(-G) = 0`.
 
 ```rust
+#[test]
 fn test_add_points() {
   let env = Env::default();
   let contract_id = env.register(Contract, ());
