@@ -86,6 +86,15 @@ fn test_add_points() {
 
 
 
+
+
+
+
+### Example
+This example uses the `g1_mul()` function to multiply a point and a scalar value, and then check if the result is as expected. The code for this example is [here](/contracts/multiply).
+
+The `multiply_points()` is a very simple contract function, it takes a point and a value as arguments and return the point calculated from the points multiplication. The example test shows how a point on the curve can be defined and used for this function. 
+
 ```rust
 pub fn multiply_point(env: Env, point: Bn254G1Affine, scalar: U256) -> Bn254G1Affine {
   // Convert the U256 multiplier to a BN254 scalar value
@@ -96,8 +105,7 @@ pub fn multiply_point(env: Env, point: Bn254G1Affine, scalar: U256) -> Bn254G1Af
 }
 ```
 
-
-
+The test creates a point based on a byte array, and another point which is a negated version of the first point. When these two points are added, the result should be (0,0) point because `G+(-G) = 0`.
 
 ```rust
 #[test]
