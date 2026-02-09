@@ -23,3 +23,5 @@ impl Contract {
     env.crypto().bn254().pairing_check(g1_points, g2_points)
   }
 }
+
+mod test;
