@@ -11,3 +11,5 @@ impl Contract {
       env.crypto().bn254().g1_add(&point_1, &point_2)
   }
 }
+
+mod test;
