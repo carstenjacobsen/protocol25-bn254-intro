@@ -148,7 +148,26 @@ pub fn pairing_check(&self, vp1: Vec<Bn254G1Affine>, vp2: Vec<Bn254G2Affine>) ->
 If the product of the pairings is `1`, the function returns `true`, otherwise `false`.
 
 ### Example
+This example uses the `pairing_check() to verify the equation `e(P1, Q1) * e(P2, Q2) = 1` for points in the G1 and G2 subgroups. The code for this example is [here](/contracts/pairing).
 
+The `simple_pairing_check()` contract function takes two G1 points and two G2 points and checks if the `e(P1, Q1) * e(P2, Q2) = 1` is true or not. The points are just test points, but could be proof from a ZK proofs system. The function takes the four points, add them to a G1Affine point vector and a G2Affine point vector, and calls the `pairing_check()` host function with the two vectors as parameters. 
 
+The host function will return either `true` or `false` depending on the check outcome. The function will panic if the provided points are not valid, so random data cannot be used, the points have to exist in the curve.
 
+```rust
+pub fn simple_pairing_check(env: Env, p1: Bn254G1Affine, p2: Bn254G1Affine, q1: Bn254G2Affine, q2: Bn254G2Affine) -> bool {
+  // Create vector of G1 points
+  let mut g1_points = Vec::new(&env);
+  g1_points.push_back(p1);
+  g1_points.push_back(p2);
+  
+  // Create vector of G2 points
+  let mut g2_points = Vec::new(&env);
+  g2_points.push_back(q1);
+  g2_points.push_back(q2);
+  
+  // Call pairing_check() with G1Affine and G2Affine vectors
+  env.crypto().bn254().pairing_check(g1_points, g2_points)
+}
+```
 
