@@ -1,120 +1,50 @@
+
+
+
+
+
+
 #[test]
 fn test_simple_pairing_check() {
-let env = Env::default();
-let contract_id = env.register(Contract, ());
-let client = ContractClient::new(&env, &contract_id);
+  let env = Env::default();
+  let contract_id = env.register(Contract, ());
+  let client = ContractClient::new(&env, &contract_id);
 
+  // Create a byte array for a G1 point (1,2)
+  let p1_point_bytes: [u8; 64] = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  // x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,  // y
+  ];
+  
+  // Create a point `p1` on the G1 curve from the byte array
+  let p1 = Bn254G1Affine::from_array(&env, &p1_point_bytes);
 
+  // Create a point `p2` by negating the point `p1`
+  let p2 = -p1.clone();
 
-let point_bytes_1: [u8; 64] = [
-// x coordinate (32 bytes)
-0, 0, 0, 0, 0, 0, 0, 0,
-0, 0, 0, 0, 0, 0, 0, 0,
-0, 0, 0, 0, 0, 0, 0, 0,
-0, 0, 0, 0, 0, 0, 0, 1,
-// y coordinate (32 bytes)
-0, 0, 0, 0, 0, 0, 0, 0,
-0, 0, 0, 0, 0, 0, 0, 0,
-0, 0, 0, 0, 0, 0, 0, 0,
-0, 0, 0, 0, 0, 0, 0, 2,
-];
+  // Create a byte array for a G2 point
+  let q1_point_bytes: [u8; 128] = [
+    25, 142, 147, 147, 146, 13, 72, 58, 114, 96, 191, 183, 49, 251, 93, 37,
+    241, 170, 73, 51, 53, 169, 231, 18, 151, 228, 133, 183, 174, 243, 18, 194,     // x_1
+    24, 0, 222, 239, 18, 31, 30, 118, 66, 106, 0, 102, 94, 92, 68, 121,
+    103, 67, 34, 212, 247, 94, 218, 221, 70, 222, 189, 92, 217, 146, 246, 237,     // x_0
+    9, 6, 137, 208, 88, 95, 240, 117, 236, 158, 153, 173, 105, 12, 51, 149,
+    188, 75, 49, 51, 112, 179, 142, 243, 85, 172, 218, 220, 209, 34, 151, 91,      // y_1
+    18, 200, 94, 165, 219, 140, 109, 235, 74, 171, 113, 128, 141, 203, 64, 143,
+    227, 209, 231, 105, 12, 67, 211, 123, 76, 230, 204, 1, 102, 250, 125, 170,     // y_0
+  ];
+  
+  // Create a point `q1` on the G2 curve from the byte array
+  let q1 = Bn254G2Affine::from_array(&env, &q1_point_bytes);
 
+  // Create a point `q2` on the G2 curve from the `q1` byte array
+  let q2 = Bn254G2Affine::from_array(&env, &q1_point_bytes);
 
-// Create G1 points from 32-byte compressed format
-let p1 = Bn254G1Affine::from_array(
-&env,
-&point_bytes_1
-);
+  // Call the function and get the result of the pairing check
+  let result = client.simple_pairing_check(&p1, &q1, &p2, &q2);
 
-/*
-&[
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
-],
-);
-*/
-
-//let point_bytes_1_dec: [u8; 64] = [ 3, 13, 74, 113, 249, 164, 254, 156, 147, 107, 233, 166, 35, 199, 216, 142, 71, 176, 240, 28, 94, 99, 139, 75, 142, 111, 73, 60, 93, 142, 138, 47 ];
-/*
-let p2 = Bn254G1Affine::from_array(
-&env,
-&point_bytes_1
-);
-*/
-
-let p2 = -p1.clone();
-
-
-
-
-
-
-
-let point_bytes_2: [u8; 128] = [
-25, 142, 147, 147, 146, 13, 72, 58,
-114, 96, 191, 183, 49, 251, 93, 37,
-241, 170, 73, 51, 53, 169, 231, 18,
-151, 228, 133, 183, 174, 243, 18, 194,
-24, 0, 222, 239, 18, 31, 30, 118,
-66, 106, 0, 102, 94, 92, 68, 121,
-103, 67, 34, 212, 247, 94, 218, 221,
-70, 222, 189, 92, 217, 146, 246, 237,
-9, 6, 137, 208, 88, 95, 240, 117,
-236, 158, 153, 173, 105, 12, 51, 149,
-188, 75, 49, 51, 112, 179, 142, 243,
-85, 172, 218, 220, 209, 34, 151, 91,
-18, 200, 94, 165, 219, 140, 109, 235,
-74, 171, 113, 128, 141, 203, 64, 143,
-227, 209, 231, 105, 12, 67, 211, 123,
-76, 230, 204, 1, 102, 250, 125, 170,
-];
-
-let _point_bytes_2: [u8; 128] = [
-// x_c1 (32 bytes)
-24, 0, 222, 239, 18, 31, 30, 118,
-66, 106, 0, 102, 94, 92, 68, 121,
-103, 67, 34, 212, 247, 94, 218, 221,
-70, 222, 189, 92, 217, 146, 246, 237,
-// x_c0 (32 bytes)
-25, 142, 147, 147, 146, 13, 72, 58,
-114, 96, 191, 183, 49, 251, 93, 37,
-241, 170, 73, 51, 53, 169, 231, 18,
-151, 228, 133, 183, 174, 243, 18, 194,
-// y_c1 (32 bytes)
-18, 200, 94, 165, 219, 140, 109, 235,
-74, 171, 113, 128, 141, 203, 64, 143,
-227, 209, 231, 105, 12, 67, 211, 123,
-76, 230, 204, 1, 102, 250, 125, 170,
-// y_c0 (32 bytes)
-9, 6, 137, 208, 88, 95, 240, 117,
-236, 158, 153, 173, 105, 12, 51, 149,
-188, 75, 49, 51, 112, 179, 142, 243,
-85, 172, 218, 220, 209, 34, 151, 91,
-];
-
-
-// Create G2 points from 64-byte compressed format
-let q1 = Bn254G2Affine::from_array(
-&env,
-&point_bytes_2
-);
-
-let q2 = Bn254G2Affine::from_array(
-&env,
-&point_bytes_2
-);
-
-
-
-
-
-
-let result = client.simple_pairing_check(&p1, &q1, &p2, &q2);
-
-std::println!("simple pairing check result = {:?}", &result);
-
-assert_eq!(result, true);
-
+  // Check if the simple_pairing_check() function returns `true`
+  assert_eq!(result, true);
 }
