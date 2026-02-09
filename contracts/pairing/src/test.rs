@@ -1,11 +1,12 @@
-
-
-
-
-
+#![cfg(test)]
+use super::*;
+use soroban_sdk::{Env, crypto::bn254::{Bn254G1Affine, Bn254G2Affine}};
 
 #[test]
 fn test_simple_pairing_check() {
+  // This test checks 
+
+  
   let env = Env::default();
   let contract_id = env.register(Contract, ());
   let client = ContractClient::new(&env, &contract_id);
@@ -18,10 +19,10 @@ fn test_simple_pairing_check() {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,  // y
   ];
   
-  // Create a point `p1` on the G1 curve from the byte array
+  // Create a point p1 on the G1 curve from the byte array
   let p1 = Bn254G1Affine::from_array(&env, &p1_point_bytes);
 
-  // Create a point `p2` by negating the point `p1`
+  // Create a point p2 by negating the point `p1`
   let p2 = -p1.clone();
 
   // Create a byte array for a G2 point
@@ -36,15 +37,15 @@ fn test_simple_pairing_check() {
     227, 209, 231, 105, 12, 67, 211, 123, 76, 230, 204, 1, 102, 250, 125, 170,     // y_0
   ];
   
-  // Create a point `q1` on the G2 curve from the byte array
+  // Create a point q1 on the G2 curve from the byte array
   let q1 = Bn254G2Affine::from_array(&env, &q1_point_bytes);
 
-  // Create a point `q2` on the G2 curve from the `q1` byte array
+  // Create a point q2 on the G2 curve from the q1 byte array
   let q2 = Bn254G2Affine::from_array(&env, &q1_point_bytes);
 
   // Call the function and get the result of the pairing check
   let result = client.simple_pairing_check(&p1, &q1, &p2, &q2);
 
-  // Check if the simple_pairing_check() function returns `true`
+  // Check if the simple_pairing_check() function returns true
   assert_eq!(result, true);
 }
