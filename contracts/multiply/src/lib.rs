@@ -5,7 +5,7 @@ use soroban_sdk::crypto::bn254::{Bn254G1Affine, Fr};
 #[contract]
 pub struct Contract;
 
-[contractimpl]
+#[contractimpl]
 impl Contract {
   pub fn multiply_point(env: Env, point: Bn254G1Affine, scalar: U256) -> Bn254G1Affine {
     // Convert the U256 multiplier to a BN254 scalar value
