@@ -150,12 +150,12 @@ If the product of the pairings is `1`, the function returns `true`, otherwise `f
 ### Example
 This example uses the `pairing_check()` to verify the equation `e(P1, Q1) * e(P2, Q2) = 1` for points in the G1 and G2 subgroups. The code for this example is [here](/contracts/pairing).
 
-The `simple_pairing_check()` contract function takes two G1 points and two G2 points and checks if the `e(P1, Q1) * e(P2, Q2) = 1` is true or not. The points are just test points, but could be proof from a ZK proofs system. The function takes the four points, add them to a G1Affine point vector and a G2Affine point vector, and calls the `pairing_check()` host function with the two vectors as parameters. 
+The `verify_pairing()` contract function takes two G1 points and two G2 points and checks if the `e(P1, Q1) * e(P2, Q2) = 1` is true or not. The points are just test points, but could be proof from a ZK proofs system. The function takes the four points, add them to a G1Affine point vector and a G2Affine point vector, and calls the `pairing_check()` host function with the two vectors as parameters. 
 
 The host function will return either `true` or `false` depending on the check outcome. The function will panic if the provided points are not valid, so random data cannot be used, the points have to exist in the curve.
 
 ```rust
-pub fn simple_pairing_check(env: Env, p1: Bn254G1Affine, p2: Bn254G1Affine, q1: Bn254G2Affine, q2: Bn254G2Affine) -> bool {
+pub fn verify_pairing(env: Env, p1: Bn254G1Affine, p2: Bn254G1Affine, q1: Bn254G2Affine, q2: Bn254G2Affine) -> bool {
   // Create vector of G1 points
   let mut g1_points = Vec::new(&env);
   g1_points.push_back(p1);
@@ -171,11 +171,11 @@ pub fn simple_pairing_check(env: Env, p1: Bn254G1Affine, p2: Bn254G1Affine, q1: 
 }
 ```
 
-The test 
+The test verifies that `e(P1, Q1) * e(P2, Q2) = 1` for a set of points in the G1 and G2 curve. An easy way to satisfy the equation is to let `P1` be a given point, let `P2` be `P1` negated and to let Q1 and Q2 be the same point. Before passing the points to the contract function, they are converted to the G1Affine/G2Affine format.
 
 ```rust
 #[test]
-fn test_simple_pairing_check() {
+fn test_verify_pairing() {
   // This test is a simple pairing check, it verifies that 
   // e(P1, Q1) * e(P2, Q2) = 1 is true for the provided G1
   // and G2 points. The points p1, p2, q1 and q2 are derived
@@ -220,7 +220,7 @@ fn test_simple_pairing_check() {
   // Call the function and get the result of the pairing check
   let result = client.simple_pairing_check(&p1, &p2, &q1, &q2);
 
-  // Check if the simple_pairing_check() function returns true
+  // Check if the verify_pairing() function returns true
   assert_eq!(result, true);
 }
 ```
