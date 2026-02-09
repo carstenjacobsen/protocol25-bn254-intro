@@ -4,8 +4,10 @@ use soroban_sdk::{Env, crypto::bn254::{Bn254G1Affine, Bn254G2Affine}};
 
 #[test]
 fn test_simple_pairing_check() {
-  // This test checks 
-
+  // This test is a simple pairing check, it verifies that 
+  // e(P1, Q1) * e(P2, Q2) = 1 is true for the provided G1
+  // and G2 points. The points p1, p2, q1 and q2 are derived
+  // from two point byte arrays.
   
   let env = Env::default();
   let contract_id = env.register(Contract, ());
