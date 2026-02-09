@@ -148,7 +148,7 @@ pub fn pairing_check(&self, vp1: Vec<Bn254G1Affine>, vp2: Vec<Bn254G2Affine>) ->
 If the product of the pairings is `1`, the function returns `true`, otherwise `false`.
 
 ### Example
-This example uses the `pairing_check() to verify the equation `e(P1, Q1) * e(P2, Q2) = 1` for points in the G1 and G2 subgroups. The code for this example is [here](/contracts/pairing).
+This example uses the `pairing_check()` to verify the equation `e(P1, Q1) * e(P2, Q2) = 1` for points in the G1 and G2 subgroups. The code for this example is [here](/contracts/pairing).
 
 The `simple_pairing_check()` contract function takes two G1 points and two G2 points and checks if the `e(P1, Q1) * e(P2, Q2) = 1` is true or not. The points are just test points, but could be proof from a ZK proofs system. The function takes the four points, add them to a G1Affine point vector and a G2Affine point vector, and calls the `pairing_check()` host function with the two vectors as parameters. 
 
@@ -171,3 +171,56 @@ pub fn simple_pairing_check(env: Env, p1: Bn254G1Affine, p2: Bn254G1Affine, q1: 
 }
 ```
 
+The test 
+
+```rust
+#[test]
+fn test_simple_pairing_check() {
+  // This test is a simple pairing check, it verifies that 
+  // e(P1, Q1) * e(P2, Q2) = 1 is true for the provided G1
+  // and G2 points. The points p1, p2, q1 and q2 are derived
+  // from two point byte arrays.
+  
+  let env = Env::default();
+  let contract_id = env.register(Contract, ());
+  let client = ContractClient::new(&env, &contract_id);
+
+  // Create a byte array for a G1 point
+  let p1_point_bytes: [u8; 64] = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  // x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,  // y
+  ];
+  
+  // Create a point p1 on the G1 curve from the byte array
+  let p1 = Bn254G1Affine::from_array(&env, &p1_point_bytes);
+
+  // Create a point p2 by negating the point `p1`
+  let p2 = -p1.clone();
+
+  // Create a byte array for a G2 point
+  let q1_point_bytes: [u8; 128] = [
+    25, 142, 147, 147, 146, 13, 72, 58, 114, 96, 191, 183, 49, 251, 93, 37,
+    241, 170, 73, 51, 53, 169, 231, 18, 151, 228, 133, 183, 174, 243, 18, 194,     // x_1
+    24, 0, 222, 239, 18, 31, 30, 118, 66, 106, 0, 102, 94, 92, 68, 121,
+    103, 67, 34, 212, 247, 94, 218, 221, 70, 222, 189, 92, 217, 146, 246, 237,     // x_0
+    9, 6, 137, 208, 88, 95, 240, 117, 236, 158, 153, 173, 105, 12, 51, 149,
+    188, 75, 49, 51, 112, 179, 142, 243, 85, 172, 218, 220, 209, 34, 151, 91,      // y_1
+    18, 200, 94, 165, 219, 140, 109, 235, 74, 171, 113, 128, 141, 203, 64, 143,
+    227, 209, 231, 105, 12, 67, 211, 123, 76, 230, 204, 1, 102, 250, 125, 170,     // y_0
+  ];
+  
+  // Create a point q1 on the G2 curve from the byte array
+  let q1 = Bn254G2Affine::from_array(&env, &q1_point_bytes);
+
+  // Create a point q2 on the G2 curve from the q1 byte array
+  let q2 = Bn254G2Affine::from_array(&env, &q1_point_bytes);
+
+  // Call the function and get the result of the pairing check
+  let result = client.simple_pairing_check(&p1, &p2, &q1, &q2);
+
+  // Check if the simple_pairing_check() function returns true
+  assert_eq!(result, true);
+}
+```
