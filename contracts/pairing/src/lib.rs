@@ -8,7 +8,7 @@ pub struct Contract;
 #[contractimpl]
 impl Contract {
   // Simple pairing check: verify e(P1, Q1) * e(P2, Q2) = 1
-  pub fn simple_pairing_check(env: Env, p1: Bn254G1Affine, p2: Bn254G1Affine, q1: Bn254G2Affine, q2: Bn254G2Affine) -> bool {
+  pub fn verify_pairing(env: Env, p1: Bn254G1Affine, p2: Bn254G1Affine, q1: Bn254G2Affine, q2: Bn254G2Affine) -> bool {
     // Create vector of G1 points
     let mut g1_points = Vec::new(&env);
     g1_points.push_back(p1);
