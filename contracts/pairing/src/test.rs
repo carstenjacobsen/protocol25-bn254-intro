@@ -46,7 +46,7 @@ fn test_simple_pairing_check() {
   let q2 = Bn254G2Affine::from_array(&env, &q1_point_bytes);
 
   // Call the function and get the result of the pairing check
-  let result = client.simple_pairing_check(&p1, &q1, &p2, &q2);
+  let result = client.simple_pairing_check(&p1, &p2, &q1, &q2);
 
   // Check if the simple_pairing_check() function returns true
   assert_eq!(result, true);
