@@ -20,7 +20,7 @@ Besides the primitives above, three new BN254 types have been added:
 
 * **Bn254G1Affine** - represents a point (x,y) on the BN254 elliptic curve, in the primary subgroup G1
 * **Bn254G2Affine** - represents a point ((x1,y1)(x2,y2)) on the BN254 elliptic curve, in the secondary subgroup G2
-* **Fr** - represents a scalar field
+* **Fr** - represents a scalar field element. If a value exceeds the subgroup order `r` it is reduced modulo `r`.
 
 For more information about X-Ray/Protocol 25, see the [blog post](https://stellar.org/blog/developers/announcing-stellar-x-ray-protocol-25).
 
