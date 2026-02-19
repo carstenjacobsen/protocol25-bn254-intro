@@ -9,7 +9,7 @@ fn test_add_points() {
   let contract_id = env.register(Contract, ());
   let client = ContractClient::new(&env, &contract_id);
 
-  // Create a byte array for a point (1,2)
+  // Create a byte array for a generator point (1,2)
   let point_bytes: [u8; 64] = [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  // x
@@ -17,20 +17,22 @@ fn test_add_points() {
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,  // y
   ];
 
-  // Create a point on the curve from the byte array
-  let point = Bn254G1Affine::from_array(&env, &point_bytes);
+  // Create a generator point on the curve from the byte array
+  let point_gen = Bn254G1Affine::from_array(&env, &point_bytes);
 
-  // Negate the point: -G has same x but negated y
-  let neg_point = -point.clone();
+  // Create the 2G point
+  let scalar_2g = Fr::from(U256::from_u32(&env, 2));
+  let point_2g = env.crypto().bn254().g1_mul(&point_p, &scalar_2g);
 
   // Call the function and get the result of the addition
-  let result = client.add_points(&point, &neg_point);
+  let result = client.add_points(&point_gen, &point_2g);
 
-  // Create a (0,0) point on the curve
-  let zero_point = Bn254G1Affine::from_array(&env, &[0u8; 64]);
-  
-  // Check if the add_points() function returns a (0,0) point
-  assert_eq!(result, zero_point);
+  // Create the 3G point
+  let scalar_3g = Fr::from(U256::from_u32(&env, 3));
+  let point_3g = env.crypto().bn254().g1_mul(&point_p, &scalar_3g);
+
+  // Check if the add_points() function returns a 3G point
+  assert_eq!(result, point_3g);
 }
   
 
