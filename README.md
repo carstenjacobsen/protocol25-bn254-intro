@@ -143,7 +143,7 @@ fn test_add_points() {
 ## pairing_check()
 The `pairing_check()` function is a native host function for multi-pairing checking between vectors of points in G1 and G2. The function takes the parameters `vp1`, a vector of G1 points, and `vp2`, a vector of G2 points, and verifies if the product of all pairings is equal to `1`. 
 
-The actual product of the pairings is a multiplicative identity in F*p*12, but for illustating the concept, it can be considered as `1`, and will be described as `1` in the following examples.
+The actual product of the pairings is a multiplicative identity in F*p*12, but for illustating the concept, it can be considered as `1`, and will be described as `1` in the following example.
 
 ```rust
 pub fn pairing_check(&self, vp1: Vec<Bn254G1Affine>, vp2: Vec<Bn254G2Affine>) -> bool
