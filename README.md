@@ -12,8 +12,8 @@ There are plenty of resources describing BN254 if you are interested in the cryp
 ### What's new?
 BN254 is a widely used pairing-friendly elliptic curve, and is often used in ZK Proofs systems. In this upgrade these three primitives were added to Soroban:
 
-* **g1_add()** - used for point addition
 * **g1_mul()** - used for scalar multiplication
+* **g1_add()** - used for point addition
 * **pairing_check()** - used for pairing checks
 
 Besides the primitives above, three new BN254 types have been added:
@@ -24,60 +24,6 @@ Besides the primitives above, three new BN254 types have been added:
 
 For more information about X-Ray/Protocol 25, see the [blog post](https://stellar.org/blog/developers/announcing-stellar-x-ray-protocol-25).
 
-
-## g1_add()
-The `g1_add()` function is a native host function for elliptic-curve point addition in the G1 subgroup. The function takes two points in the G1 as arguments, they have to be in `Bn254G1Affine` format:
-
-```rust
-pub fn g1_add(&self, p0: &Bn254G1Affine, p1: &Bn254G1Affine) -> Bn254G1Affine
-```
-
-The sum of `p0` and `p1` is returned as a new point in the `Bn254G1Affine` format.
-
-### Example
-This example uses the `g1_add()` function to add two points, and then check if the result is as expected. The code for this example is [here](/contracts/add).
-
-The `add_points()` is a very simple contract function, it takes two points as arguments and return the point calculated from the points addition. The example test shows how points on the curve can be defined and used for this function. 
-
-```rust
-pub fn add_points(env: Env, point_1: Bn254G1Affine, point_2: Bn254G1Affine) -> Bn254G1Affine {
-  env.crypto().bn254().g1_add(&point_1, &point_2)
-}
-```
-
-The test creates a point based on a byte array, and another point which is a negated version of the first point. When these two points are added, the result should be (0,0) point since `G+(-G) = 0`.
-
-```rust
-#[test]
-fn test_add_points() {
-  let env = Env::default();
-  let contract_id = env.register(Contract, ());
-  let client = ContractClient::new(&env, &contract_id);
-
-  // Create a byte array for a point (1,2)
-  let point_bytes: [u8; 64] = [
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  // x
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,  // y
-  ];
-
-  // Create a point on the curve from the byte array
-  let point = Bn254G1Affine::from_array(&env, &point_bytes);
-
-  // Negate the point (has same x but negated y)
-  let neg_point = -point.clone();
-
-  // Call the function and get the result of the addition
-  let result = client.add_points(&point, &neg_point);
-
-  // Create a (0,0) point on the curve
-  let zero_point = Bn254G1Affine::from_array(&env, &[0u8; 64]);
-  
-  // Check if the add_points() function returns a (0,0) point
-  assert_eq!(result, zero_point);
-}
-```
 
 ## g1_mul()
 The `g1_mul()` function is a native host function for elliptic-curve point multiplication in the G1 subgroup. The function takes a point in G1 and a scalar value as arguments:
@@ -135,6 +81,62 @@ fn test_multiply_point() {
   // Check if the multiply_point() function returns the (1,2) 
   // point after the multiplication
   assert_eq!(result, point);
+}
+```
+
+## g1_add()
+The `g1_add()` function is a native host function for elliptic-curve point addition in the G1 subgroup. The function takes two points in the G1 as arguments, they have to be in `Bn254G1Affine` format:
+
+```rust
+pub fn g1_add(&self, p0: &Bn254G1Affine, p1: &Bn254G1Affine) -> Bn254G1Affine
+```
+
+The sum of `p0` and `p1` is returned as a new point in the `Bn254G1Affine` format.
+
+### Example
+This example uses the `g1_add()` function to add two points, and then check if the result is as expected. The code for this example is [here](/contracts/add).
+
+The `add_points()` is a very simple contract function, it takes two points as arguments and return the point calculated from the points addition. The example test shows how points on the curve can be defined and used for this function. 
+
+```rust
+pub fn add_points(env: Env, point_1: Bn254G1Affine, point_2: Bn254G1Affine) -> Bn254G1Affine {
+  env.crypto().bn254().g1_add(&point_1, &point_2)
+}
+```
+
+The test creates a point based on a byte array, tests the `add_points()` functions by testing if `G + 2G = 3G`. The test uses `g1_mul()` for calculating `2G` and `3G`.
+
+```rust
+#[test]
+fn test_add_points() {
+  let env = Env::default();
+  let contract_id = env.register(Contract, ());
+  let client = ContractClient::new(&env, &contract_id);
+
+  // Create a byte array for a generator point (1,2)
+  let point_bytes: [u8; 64] = [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  // x
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,  // y
+  ];
+
+  // Create a generator point on the curve from the byte array
+  let point_gen = Bn254G1Affine::from_array(&env, &point_bytes);
+
+  // Create the 2G point
+  let scalar_2g = Fr::from(U256::from_u32(&env, 2));
+  let point_2g = env.crypto().bn254().g1_mul(&point_p, &scalar_2);
+
+  // Call the function and get the result of the addition
+  let result = client.add_points(&point_gen, &point_2g);
+
+  // Create the 3G point
+  let scalar_3g = Fr::from(U256::from_u32(&env, 3));
+  let point_3g = env.crypto().bn254().g1_mul(&point_p, &scalar_3);
+
+  // Check if the add_points() function returns a 3G point
+  assert_eq!(result, point_3g);
 }
 ```
 
