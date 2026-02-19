@@ -133,7 +133,7 @@ fn test_add_points() {
 
   // Create the 3G point
   let scalar_3g = Fr::from(U256::from_u32(&env, 3));
-  let point_3g = env.crypto().bn254().g1_mul(&point_p, &scalar_3g);
+  let point_3g = env.crypto().bn254().g1_mul(&point_gen, &scalar_3g);
 
   // Check if the add_points() function returns a 3G point
   assert_eq!(result, point_3g);
